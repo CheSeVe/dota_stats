@@ -1,4 +1,4 @@
-package ru.CheSeVe.lutiy_project.Entity;
+package ru.CheSeVe.lutiy_project.entity;
 
 import jakarta.persistence.*;
 
@@ -9,8 +9,8 @@ import java.util.Set;
 @Table(name = "matches")
 public class Match {
     private long matchId;
-    private Set<User> players; //хз как правильно сделать, в матче должна хранится информация об игроках, которые в нем участвовали
-    private List<Item> items; //такая же хуйня
+    private Set<User> players;
+    private List<Item> items;
     public void setMatchId(long matchId) {
         this.matchId = matchId;
     }

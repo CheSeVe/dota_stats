@@ -1,4 +1,4 @@
-package ru.CheSeVe.lutiy_project.Entity;
+package ru.CheSeVe.lutiy_project.entity;
 
 import jakarta.persistence.*;
 
