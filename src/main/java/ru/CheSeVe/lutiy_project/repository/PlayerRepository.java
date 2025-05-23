@@ -2,9 +2,8 @@ package ru.CheSeVe.lutiy_project.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.CheSeVe.lutiy_project.entity.Hero;
+import ru.CheSeVe.lutiy_project.entity.Player;
 
 @Repository
-public interface HeroRepository extends JpaRepository<Hero, String> {
-
+public interface PlayerRepository extends JpaRepository<Player, Long> {
 }

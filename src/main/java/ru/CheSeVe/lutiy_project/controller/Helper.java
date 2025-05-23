@@ -18,12 +18,12 @@ public class Helper {
     @Autowired
     UserRepository userRepository;
 
-    public User getUserOrException(Integer userId) {
+    public User getUserOrException(Long userId) {
         return userRepository.findById(userId).orElseThrow(()->new NotFoundException(String.format("user not found", userId)));
     }
 
     public User getUserByUserNameOrException(String userName) {
-        return userRepository.findByUserName(userName).findAny().orElseThrow(()->new NotFoundException(String.format(("user not found"), userName)));
+        return userRepository.findAllByUserName(userName).findAny().orElseThrow(()->new NotFoundException(String.format(("user not found"), userName)));
     }
 
 }

@@ -1,9 +1,13 @@
 package ru.CheSeVe.lutiy_project.dto;
 
+import jakarta.persistence.ManyToMany;
 import lombok.*;
+import lombok.Builder;
 import lombok.experimental.FieldDefaults;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashMap;
 
 @Data
 @Builder
@@ -20,9 +24,8 @@ public class UserDto {
     @NonNull
     String password;
 
-    private Integer mmr;
+    String rank;
 
-    private Long steamId;
+    Timestamp created = Timestamp.from(Instant.now());
 
-    Instant created = Instant.now();
 }

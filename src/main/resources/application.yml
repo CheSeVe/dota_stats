@@ -3,13 +3,13 @@ server:
   error:
     whitelable:
       enabled: false
-      spring:
+spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   datasource:
     url: jdbc:postgresql://localhost:5432/lutiy-project
     username: postgres
     password: postgres
-    driverClassName: org.postgresql.Driver
+    driver-class-name: org.postgresql.Driver

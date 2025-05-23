@@ -8,11 +8,10 @@ import ru.CheSeVe.lutiy_project.entity.User;
 public class UserDtoFactory {
     public UserDto createUserDto(User user) {
         return UserDto.builder()
-                .id(user.getId())
+                .id(user.getUserId())
                 .userName(user.getUserName())
                 .password(user.getPassword())
-                .mmr(user.getMmr())
-                .steamId(user.getSteamId())
-                .build();
+                .rank(user.getRank()).build();
+
     }
 }

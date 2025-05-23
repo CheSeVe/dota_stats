@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -16,8 +19,7 @@ import java.time.Instant;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
+    Long userId;
 
     @Column(nullable = false, unique = true)
     String userName;
@@ -25,22 +27,34 @@ public class User {
     @Column(nullable = false)
     String password;
 
-    Integer mmr;
+    String rank;
 
-    Long steamId;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    Set<Player> players = new HashSet<>();
 
     @Builder.Default
-    Instant created = Instant.now();
+    Timestamp created = Timestamp.from(Instant.now());
 
-    public User(String userName, String password, Integer mmr, Long steamId) {
+    public void addPlayer(Player player) {
+        players.add(player);
+        player.setUser(this);
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
+        player.setUser(null);
+    }
+
+    public User(Long steamId, String userName, String password, String rank) {
 
         this.userName = userName;
 
         this.password = password;
 
-        this.mmr = mmr;
+        this.rank = rank;
 
-        this.steamId = steamId;
+        this.userId = steamId;
 
     }
 }
