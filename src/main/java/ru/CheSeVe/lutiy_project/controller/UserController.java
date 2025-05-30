@@ -5,17 +5,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.CheSeVe.lutiy_project.dto.UserDto;
 import ru.CheSeVe.lutiy_project.entity.User;
 import ru.CheSeVe.lutiy_project.exception.AlreadyExistException;
+import ru.CheSeVe.lutiy_project.exception.NotFoundException;
 import ru.CheSeVe.lutiy_project.factory.UserDtoFactory;
 import ru.CheSeVe.lutiy_project.repository.UserRepository;
-
-import java.util.HashSet;
 
 @RestController
 @Transactional
@@ -39,10 +35,13 @@ public class UserController {
     @PostMapping(CREATE_USER)
     public UserDto createUser(@RequestParam(value = "user_name") String userName,
                               @RequestParam(value = "password") String password,
-                              @RequestParam(value = "mmr") String rank,
-                              @RequestParam(value = "steamId") Long steamId) {
+                              @RequestParam(value = "rank") String rank,
+                              @RequestParam(value = "id") Long steamId) {
         userRepository.findByUserName(userName).ifPresent(user -> {
             throw new AlreadyExistException(String.format("user already exist", userName));
+        });
+        userRepository.findById(steamId).ifPresent(user -> {
+            throw new AlreadyExistException(String.format("user already exist", steamId));
         });
         User user = userRepository.saveAndFlush(new User(steamId, userName, password, rank));
         userRepository.save(user);
@@ -50,10 +49,35 @@ public class UserController {
     }
 
     @DeleteMapping(DELETE_USER)
-    public void deleteUser(@RequestParam(value = "id") Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(@RequestParam(value = "id") Long steamId) {
+        userRepository.findById(steamId).orElseThrow(() -> new NotFoundException(String.format("user not found", steamId)));
+        userRepository.deleteById(steamId);
     }
 
+
+    @GetMapping(GET_USER)
+    public UserDto getUser(@RequestParam("id") Long steamId) {
+        User user = userRepository.findById(steamId).orElseThrow(() -> new NotFoundException(String.format("user not found", steamId)));
+        return userDtoFactory.createUserDto(user);
+    }
+
+    @PutMapping(UPDATE_USER)
+    public UserDto updateUser(@RequestParam("oldId") Long oldUserId, @RequestBody User newUser) {
+        User oldUser = userRepository.findById(oldUserId).orElseThrow(() -> new NotFoundException(String.format("user not found", oldUserId)));
+        if (!oldUserId.equals(newUser.getUserId())) {
+            userRepository.findById(newUser.getUserId()).ifPresent(user -> {
+                throw new AlreadyExistException(String.format("user already exist", newUser.getUserId()));
+            });
+        }
+        if (!oldUser.getUserName().equals(newUser.getUserName())) {
+            userRepository.findByUserName(newUser.getUserName()).ifPresent(user -> {
+                throw new AlreadyExistException(String.format("user already exist", newUser.getUserName()));
+            });
+        }
+            userRepository.delete(oldUser);
+            userRepository.saveAndFlush(newUser);
+            return userDtoFactory.createUserDto(newUser);
+    }
 
 
 }

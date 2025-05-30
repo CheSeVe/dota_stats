@@ -1,7 +1,7 @@
 package ru.CheSeVe.lutiy_project.dto;
 
+import jakarta.persistence.*;
 import lombok.*;
-import lombok.Builder;
 import lombok.experimental.FieldDefaults;
 import ru.CheSeVe.lutiy_project.entity.MatchUser;
 
@@ -14,20 +14,12 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
+public class MatchDto {
     @NonNull
-    Long userId;
-
-    @NonNull
-    String userName;
+    Long matchId;
 
     @NonNull
-    String password;
-
-    String rank;
-
     Set<MatchUser> matchUsers;
 
-    Instant created;
-
+    Instant created = Instant.now();
 }

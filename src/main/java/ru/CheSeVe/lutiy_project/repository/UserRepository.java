@@ -4,7 +4,10 @@ package ru.CheSeVe.lutiy_project.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import ru.CheSeVe.lutiy_project.enums.Hero;
 import ru.CheSeVe.lutiy_project.entity.User;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -12,6 +15,5 @@ import java.util.stream.Stream;
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u")
     Stream<User> findAllByUserName(String userName);
-
     Optional<User> findByUserName(String userName);
 }

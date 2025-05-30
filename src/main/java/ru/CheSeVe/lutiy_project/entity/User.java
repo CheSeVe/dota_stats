@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,7 @@ import java.util.Set;
 @Builder
 public class User {
     @Id
-    Long userId;
+    Long userId; // = steamId
 
     @Column(nullable = false, unique = true)
     String userName;
@@ -29,32 +28,38 @@ public class User {
 
     String rank;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    Set<Player> players = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    Set<MatchUser> matchUsers = new HashSet<>();
 
     @Builder.Default
-    Timestamp created = Timestamp.from(Instant.now());
+    Instant created = Instant.now();
 
-    public void addPlayer(Player player) {
-        players.add(player);
-        player.setUser(this);
-    }
+        public User(Long steamId, String userName, String password, String rank) {
 
-    public void removePlayer(Player player) {
-        players.remove(player);
-        player.setUser(null);
-    }
+            this.userId = steamId;
 
-    public User(Long steamId, String userName, String password, String rank) {
+            this.userName = userName;
+
+            this.password = password;
+
+            this.rank = rank;
+
+            matchUsers = new HashSet<>();
+
+            created = Instant.now();
+        }
+
+    public User(Long steamId, String userName, String password) {
 
         this.userName = userName;
 
         this.password = password;
 
-        this.rank = rank;
-
         this.userId = steamId;
 
+        matchUsers = new HashSet<>();
+
+        created = Instant.now();
     }
 }
