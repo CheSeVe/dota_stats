@@ -18,6 +18,7 @@ import java.util.Set;
 @Builder
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long userId; // = steamId
 
     @Column(nullable = false, unique = true)
@@ -35,31 +36,24 @@ public class User {
     @Builder.Default
     Instant created = Instant.now();
 
-        public User(Long steamId, String userName, String password, String rank) {
 
-            this.userId = steamId;
-
-            this.userName = userName;
-
-            this.password = password;
-
-            this.rank = rank;
-
-            matchUsers = new HashSet<>();
-
-            created = Instant.now();
-        }
-
-    public User(Long steamId, String userName, String password) {
+    public User(String userName, String password) {
 
         this.userName = userName;
 
         this.password = password;
 
-        this.userId = steamId;
-
         matchUsers = new HashSet<>();
 
         created = Instant.now();
     }
+
+    public void addMatchUser(MatchUser matchUser) {
+        matchUsers.add(matchUser); //добавлять матчюзера в сет не надо, т.к. будет приходить уже готовый сет
+    }
+
+    public void removeMatchUser(MatchUser matchUser) {
+        matchUsers.remove(matchUser); // не уверен, что нужно убирать матчюзера из матча
+    }
+
 }
